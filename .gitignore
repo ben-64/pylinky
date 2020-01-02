@@ -1,0 +1,6 @@
+wifi.txt
+debug.txt
+mqtt.txt
+*.pyc
+__pycache__/
+*swp
