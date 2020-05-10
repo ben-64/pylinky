@@ -11,14 +11,17 @@ uos.dupterm(None, 1)
 
 class Linky(object):
     KEYS = [b"PAP",b"IINST",b"BASE"]
-    def __init__(self):
+    def __init__(self,debug):
         self.uart = machine.UART(0,1200)
         self.uart.init(1200, bits=7, parity=0, stop=1)
+        self.debug = debug
 
     def raw_read(self):
         r = None
         while r is None:
+            self.debug.println("Going to read on uart")
             r = self.uart.read()
+            self.debug.println("UART READ: %r" % r)
         return r
 
     def readframe(self):
@@ -150,7 +153,7 @@ def main(seconds):
     mqtt = MQTT("mqtt.txt")
 
     try:
-        linky = Linky()
+        linky = Linky(debug)
     except Exception as e:
         debug.println("Unable to create Linky() : %r" % (e,))
         sys.exit(1)
@@ -165,6 +168,7 @@ def main(seconds):
             if b"PAP" in d:  mqtt.publish(b"power", d[b"PAP"])
             if b"BASE" in d: mqtt.publish(b"base", d[b"BASE"])
             if b"IINST" in d: mqtt.publish(b"instant", d[b"IINST"])
+            debug.println("End mqtt publishing")
         except Exception as e:
             debug.println("Unable to read on linky : %r" % (e,))
         pitinfo_led.off()
