@@ -174,4 +174,4 @@ def main(seconds):
         pitinfo_led.off()
         time.sleep(seconds)
 
-main(5)
+main(10)
