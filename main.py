@@ -114,8 +114,10 @@ class MQTT(object):
         self.config = config
         self.enable = True
         self.load_config()
+        self.mqtt = MQTTClient("pylinky",self.server,user=self.user,password=self.password)
+
+    def connect(self):
         if self.enable:
-            self.mqtt = MQTTClient("pylinky",self.server,user=self.user,password=self.password)
             self.mqtt.connect()
 
     def load_config(self):
@@ -152,6 +154,8 @@ def main(seconds):
     debug = Debug("debug.txt")
     mqtt = MQTT("mqtt.txt")
 
+    mqtt.connect()
+
     try:
         linky = Linky(debug)
     except Exception as e:
@@ -164,12 +168,21 @@ def main(seconds):
         pitinfo_led.on()
         try:
             d = linky.get_data()
-            #debug.println("%r" % (d,))
-            if b"PAPP" in d:  mqtt.publish(b"power", d[b"PAPP"])
-            if b"BASE" in d: mqtt.publish(b"base", d[b"BASE"])
-            if b"IINST" in d: mqtt.publish(b"instant", d[b"IINST"])
         except Exception as e:
             debug.println("Unable to read on linky : %r" % (e,))
+        else:
+            #debug.println("%r" % (d,))
+            try:
+                if b"PAPP" in d:  mqtt.publish(b"power", d[b"PAPP"])
+                if b"BASE" in d: mqtt.publish(b"base", d[b"BASE"])
+                if b"IINST" in d: mqtt.publish(b"instant", d[b"IINST"])
+            except Exception as e:
+                debug.println("Unable to publish : %r" % (e,))
+                try:
+                    mqtt.connect()
+                except:
+                    pass
+
         pitinfo_led.off()
         time.sleep(seconds)
 
