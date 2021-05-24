@@ -10,7 +10,7 @@ from umqttsimple import MQTTClient
 uos.dupterm(None, 1)
 
 class Linky(object):
-    KEYS = [b"PAP",b"IINST",b"BASE"]
+    KEYS = [b"PAPP",b"IINST",b"BASE"]
     def __init__(self,debug):
         self.uart = machine.UART(0,1200)
         self.uart.init(1200, bits=7, parity=0, stop=1,rxbuf=200)
@@ -165,7 +165,7 @@ def main(seconds):
         try:
             d = linky.get_data()
             #debug.println("%r" % (d,))
-            if b"PAP" in d:  mqtt.publish(b"power", d[b"PAP"])
+            if b"PAPP" in d:  mqtt.publish(b"power", d[b"PAPP"])
             if b"BASE" in d: mqtt.publish(b"base", d[b"BASE"])
             if b"IINST" in d: mqtt.publish(b"instant", d[b"IINST"])
         except Exception as e:
