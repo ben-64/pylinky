@@ -13,7 +13,7 @@ class Linky(object):
     KEYS = [b"PAPP",b"IINST",b"BASE"]
     def __init__(self,debug):
         self.uart = machine.UART(0,1200)
-        self.uart.init(1200, bits=7, parity=0, stop=1,rxbuf=200)
+        self.uart.init(1200, bits=7, parity=0, stop=1,rxbuf=200,timeout=100)
         self.debug = debug
 
     def raw_read(self):
