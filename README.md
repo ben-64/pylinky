@@ -8,7 +8,7 @@ It is used on a Nodemcu (ESP 8266), with a micropython firmware. In addition a P
 
 # Setup
 
-The main.py file and umqttsimple.py (https://github.com/micropython/micropython-lib/tree/master/umqtt.simple) has to be uploaded on the ESP 8266. For example if webrep is setup:
+The main.py file and umqttsimple.py (https://github.com/micropython/micropython-lib/tree/master/umqtt.simple) has to be uploaded on the ESP 8266. For example if [webrep](https://github.com/micropython/webrepl) is setup:
 
    $ webrepl_cli.py main.py $IP_ESP:main.py
    $ webrepl_cli.py umqttsimple.py $IP_ESP:umqttsimple.py
