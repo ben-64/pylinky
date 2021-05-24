@@ -13,15 +13,14 @@ class Linky(object):
     KEYS = [b"PAP",b"IINST",b"BASE"]
     def __init__(self,debug):
         self.uart = machine.UART(0,1200)
-        self.uart.init(1200, bits=7, parity=0, stop=1)
+        self.uart.init(1200, bits=7, parity=0, stop=1,rxbuf=200)
         self.debug = debug
 
     def raw_read(self):
         r = None
         while r is None:
-            self.debug.println("Going to read on uart")
             r = self.uart.read()
-            self.debug.println("UART READ: %r" % r)
+        self.debug.print("%r|" % r)
         return r
 
     def readframe(self):
@@ -65,6 +64,7 @@ class Linky(object):
 
     def get_data(self):
         frame = self.readframe()
+        self.debug.println("\nFrame: %r" % (frame,))
         data = self.parse_frame(frame)
         return data
 
@@ -164,11 +164,10 @@ def main(seconds):
         pitinfo_led.on()
         try:
             d = linky.get_data()
-            debug.println("%r" % (d,))
+            #debug.println("%r" % (d,))
             if b"PAP" in d:  mqtt.publish(b"power", d[b"PAP"])
             if b"BASE" in d: mqtt.publish(b"base", d[b"BASE"])
             if b"IINST" in d: mqtt.publish(b"instant", d[b"IINST"])
-            debug.println("End mqtt publishing")
         except Exception as e:
             debug.println("Unable to read on linky : %r" % (e,))
         pitinfo_led.off()
