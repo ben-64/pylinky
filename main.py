@@ -154,7 +154,10 @@ def main(seconds):
     debug = Debug("debug.txt")
     mqtt = MQTT("mqtt.txt")
 
-    mqtt.connect()
+    try:
+        mqtt.connect()
+    except Exception as e:
+        debug.println("Unable to connect to mqtt : %r" % (e,))
 
     try:
         linky = Linky(debug)
