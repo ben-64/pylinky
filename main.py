@@ -114,7 +114,7 @@ class MQTT(object):
         self.config = config
         self.enable = True
         self.load_config()
-        self.mqtt = MQTTClient("pylinky",self.server,user=self.user,password=self.password)
+        self.mqtt = MQTTClient("pylinky",self.server,user=self.user,password=self.password,keepalive=60)
 
     def connect(self):
         if self.enable:
